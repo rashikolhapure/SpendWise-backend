@@ -2,6 +2,7 @@ package in.rashi.backend.service.impl;
 
 import in.rashi.backend.dto.ExpenseDTO;
 import in.rashi.backend.entity.ExpenseEntity;
+import in.rashi.backend.exceptions.ResourceNotFoundException;
 import in.rashi.backend.repository.ExpenseRepository;
 import in.rashi.backend.service.ExpenseService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,19 @@ public class ExpenseServiceImpl implements ExpenseService {
         List<ExpenseDTO> listOfExpenses = list.stream().map(expenseEntity -> mapToExpenseDTO(expenseEntity)).collect(Collectors.toList());
         //Return the list
         return listOfExpenses;
+    }
+    
+     /**
+     * It will fetch the single expense details from database
+     * @param expenseId
+     * @return ExpenseDTO
+     * */
+    @Override
+    public ExpenseDTO getExpenseByExpenseId(String expenseId) {
+        ExpenseEntity expenseEntity = expenseRepository.findByExpenseId(expenseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Expense not found for the expense id "+expenseId));
+        log.info("Printing the expense entity details {}", expenseEntity);
+        return mapToExpenseDTO(expenseEntity);
     }
 
     /**
