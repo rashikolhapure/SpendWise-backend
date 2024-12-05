@@ -84,6 +84,21 @@ public class ExpenseController {
     }
 
     /**
+     * It will update the expense details to database
+     * @param updateRequest
+     * @param expenseId
+     * @return ExpenseResponse
+     * */
+    @PutMapping("/expenses/{expenseId}")
+    public ExpenseResponse updateExpenseDetails(@RequestBody ExpenseRequest updateRequest, @PathVariable String expenseId) {
+        log.info("API PUT /expenses/{} request body {}", expenseId, updateRequest);
+        ExpenseDTO updatedExpenseDTO = mapToExpenseDTO(updateRequest);
+        updatedExpenseDTO = expenseService.updateExpenseDetails(updatedExpenseDTO, expenseId);
+        log.info("Printing the updated expense dto details {}", updatedExpenseDTO);
+        return mapToExpenseResponse(updatedExpenseDTO);
+    }
+    
+    /**
      * Mapper method to map values from Expense request to expense dto
      * @param expenseRequest
      * @return ExpenseDTO
@@ -92,7 +107,7 @@ public class ExpenseController {
         return modelMapper.map(expenseRequest, ExpenseDTO.class);
     }
 
-    
+
     /**
      * Mapper method for converting expense dto object to expense response
      * @param expenseDTO
